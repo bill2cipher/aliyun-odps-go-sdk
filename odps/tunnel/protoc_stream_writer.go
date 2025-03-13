@@ -23,6 +23,13 @@ import (
 	"google.golang.org/protobuf/encoding/protowire"
 )
 
+var bufPool = &sync.Pool{
+	New: func() interface{} {
+		return make([]byte, 0, 10)
+	},
+}
+
+
 type ProtocStreamWriter struct {
 	inner io.Writer
 }
