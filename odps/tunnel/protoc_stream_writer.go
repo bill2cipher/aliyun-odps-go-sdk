@@ -38,20 +38,26 @@ func (r *ProtocStreamWriter) WriteTag(num protowire.Number, typ protowire.Type) 
 }
 
 func (r *ProtocStreamWriter) WriteVarint(v uint64) error {
-	b := protowire.AppendVarint(nil, v)
+	b := bufPool.Get().([]byte)
+	b = protowire.AppendVarint(b, v)
 	err := writeFull(r.inner, b)
+	bufPool.Put(b[:0])
 	return err
 }
 
 func (r *ProtocStreamWriter) WriteFixed32(val uint32) error {
-	b := protowire.AppendFixed32(nil, val)
+	b := bufPool.Get().([]byte)
+	b = protowire.AppendFixed32(b, val)
 	err := writeFull(r.inner, b)
+	bufPool.Put(b[:0])
 	return err
 }
 
 func (r *ProtocStreamWriter) WriteFixed64(val uint64) error {
-	b := protowire.AppendFixed64(nil, val)
+	b := bufPool.Get().([]byte)
+	b = protowire.AppendFixed64(b, val)
 	err := writeFull(r.inner, b)
+	bufPool.Put(b[:0])
 	return err
 }
 
